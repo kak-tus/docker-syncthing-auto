@@ -1,7 +1,6 @@
 # docker-syncthing-auto
 
-Automated syncthing: just run container and it automagically discover other containers, connects to them and
-start syncing. No need to any manual configuration to start syncing.
+Automated syncthing: just run container and it automagically discover other containers, connects to them and start syncing. No need to any manual configuration to start syncing.
 
 You need running instance of [Consul](https://www.consul.io) to discovery.
 
@@ -38,8 +37,6 @@ SYNC_IP - external IP of container. Optional. If not set, service got internal c
 
 ## Run in production
 
-In most cases you need to pass SYNC_IP to each container and expose 22000 port to connectivity containers to each
-other. You can expose 8384 port to connect to GUI. Don't expose GUI port to worldwide access.
+In most cases you need to pass SYNC_IP to each container and expose 22000 port to connectivity containers to each other. You can expose 8384 port to connect to GUI. Don't expose GUI port to worldwide access.
 
-If you use weave networking, SYNC_IP is not required. Service detect IP automatically and connect to each other thru
-weave network.
+If you use weave networking, SYNC_IP is not required. Service detect IP automatically and connect to each other thru weave network.
