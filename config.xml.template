@@ -1,0 +1,80 @@
+{{ $service := env "SYNC_SERVICE" }}
+<configuration version="17">
+    {{ range $dc := datacenters }}
+    {{ range $folder_id := ls ( printf "service/syncthing-auto/%s/folders/list@%s" $service $dc ) }}
+    <folder id="{{ $folder_id.Key }}" label="" path="{{ $folder_id.Value }}" type="readwrite" rescanIntervalS="60" ignorePerms="false" autoNormalize="true">
+
+        {{ range $dc := datacenters }}
+        {{ range $device_id := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
+        {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/name@%s" $service $device_id.Key $dc ) }}
+        {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/ip@%s" $service $device_id.Key $dc ) }}
+        <device id="{{ $device_id.Key }}" introducedBy=""></device>
+        {{ end }}{{ end }}{{ end }}{{ end }}
+
+        <minDiskFreePct>1</minDiskFreePct>
+        <versioning></versioning>
+        <copiers>0</copiers>
+        <pullers>0</pullers>
+        <hashers>0</hashers>
+        <order>random</order>
+        <ignoreDelete>false</ignoreDelete>
+        <scanProgressIntervalS>0</scanProgressIntervalS>
+        <pullerSleepS>0</pullerSleepS>
+        <pullerPauseS>0</pullerPauseS>
+        <maxConflicts>10</maxConflicts>
+        <disableSparseFiles>false</disableSparseFiles>
+        <disableTempIndexes>false</disableTempIndexes>
+        <fsync>true</fsync>
+    </folder>
+    {{ end }}{{ end }}
+
+    {{ range $dc := datacenters }}
+    {{ range $device_id := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
+    {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/name@%s" $service $device_id.Key $dc ) }}
+    {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/ip@%s" $service $device_id.Key $dc ) }}
+    <device id="{{ $device_id.Key }}" name="{{ key ( printf "service/syncthing-auto/%s/devices/%s/name@%s" $service $device_id.Key $dc ) }}" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
+        <address>{{ key ( printf "service/syncthing-auto/%s/devices/%s/ip@%s" $service $device_id.Key $dc ) }}</address>
+    </device>
+    {{ end }}{{ end }}{{ end }}{{ end }}
+
+    <gui enabled="true" tls="false" debugging="false">
+        <address>0.0.0.0:8384</address>
+        <apikey>key</apikey>
+        <theme>default</theme>
+    </gui>
+
+    <options>
+        <listenAddress>default</listenAddress>
+        <globalAnnounceServer>default</globalAnnounceServer>
+        <globalAnnounceEnabled>false</globalAnnounceEnabled>
+        <localAnnounceEnabled>false</localAnnounceEnabled>
+        <localAnnouncePort>21027</localAnnouncePort>
+        <localAnnounceMCAddr>[ff12::8384]:21027</localAnnounceMCAddr>
+        <maxSendKbps>0</maxSendKbps>
+        <maxRecvKbps>0</maxRecvKbps>
+        <reconnectionIntervalS>60</reconnectionIntervalS>
+        <relaysEnabled>false</relaysEnabled>
+        <relayReconnectIntervalM>10</relayReconnectIntervalM>
+        <startBrowser>true</startBrowser>
+        <natEnabled>false</natEnabled>
+        <natLeaseMinutes>60</natLeaseMinutes>
+        <natRenewalMinutes>30</natRenewalMinutes>
+        <natTimeoutSeconds>10</natTimeoutSeconds>
+        <urAccepted>0</urAccepted>
+        <urUniqueID></urUniqueID>
+        <urURL>https://data.syncthing.net/newdata</urURL>
+        <urPostInsecurely>false</urPostInsecurely>
+        <urInitialDelayS>1800</urInitialDelayS>
+        <restartOnWakeup>true</restartOnWakeup>
+        <autoUpgradeIntervalH>12</autoUpgradeIntervalH>
+        <keepTemporariesH>24</keepTemporariesH>
+        <cacheIgnoredFiles>false</cacheIgnoredFiles>
+        <progressUpdateIntervalS>5</progressUpdateIntervalS>
+        <symlinksEnabled>true</symlinksEnabled>
+        <limitBandwidthInLan>false</limitBandwidthInLan>
+        <minHomeDiskFreePct>1</minHomeDiskFreePct>
+        <releasesURL>https://upgrades.syncthing.net/meta.json</releasesURL>
+        <overwriteRemoteDeviceNamesOnConnect>false</overwriteRemoteDeviceNamesOnConnect>
+        <tempIndexMinBlocks>10</tempIndexMinBlocks>
+    </options>
+</configuration>
