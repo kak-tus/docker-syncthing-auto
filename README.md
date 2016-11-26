@@ -26,10 +26,12 @@ SYNC_SERVICE - some service name. Must be identical thru syncthing-auto cluster.
 
 SYNC_FOLDERS - folders to sync. Required. Format:
 
+```
 SYNC_FOLDERS="
 <uniq_folder_tag_in_syncthing_auto_cluster_1:folder_path_in_container_1>
 <uniq_folder_tag_in_syncthing_auto_cluster_2:folder_path_in_container_2>
 ...
 "
+```
 
 SYNC_IP - external IP of container. Optional. If not set, service got internal container IP.
