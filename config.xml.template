@@ -5,11 +5,10 @@
     <folder id="{{ $folder_id.Key }}" label="" path="{{ $folder_id.Value }}" type="readwrite" rescanIntervalS="60" ignorePerms="false" autoNormalize="true">
 
         {{ range $dc := datacenters }}
-        {{ range $device_id := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
-        {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/name@%s" $service $device_id.Key $dc ) }}
-        {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/ip@%s" $service $device_id.Key $dc ) }}
-        <device id="{{ $device_id.Key }}" introducedBy=""></device>
-        {{ end }}{{ end }}{{ end }}{{ end }}
+        {{ range $ip := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
+        {{ if ne ( key_or_default ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) "0" ) "0" }}
+        <device id="{{ key ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}" introducedBy=""></device>
+        {{ end }}{{ end }}{{ end }}
 
         <minDiskFreePct>1</minDiskFreePct>
         <versioning></versioning>
@@ -29,13 +28,12 @@
     {{ end }}{{ end }}
 
     {{ range $dc := datacenters }}
-    {{ range $device_id := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
-    {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/name@%s" $service $device_id.Key $dc ) }}
-    {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/ip@%s" $service $device_id.Key $dc ) }}
-    <device id="{{ $device_id.Key }}" name="{{ key ( printf "service/syncthing-auto/%s/devices/%s/name@%s" $service $device_id.Key $dc ) }}" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
-        <address>{{ key ( printf "service/syncthing-auto/%s/devices/%s/ip@%s" $service $device_id.Key $dc ) }}</address>
+    {{ range $ip := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
+    {{ if ne ( key_or_default ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) "0" ) "0" }}
+    <device id="{{ key ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}" name="{{ $ip.Key }}" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
+        <address>tcp://{{ $ip.Key }}:22000</address>
     </device>
-    {{ end }}{{ end }}{{ end }}{{ end }}
+    {{ end }}{{ end }}{{ end }}
 
     <gui enabled="true" tls="false" debugging="false">
         <address>0.0.0.0:8384</address>
@@ -44,7 +42,7 @@
     </gui>
 
     <options>
-        <listenAddress>default</listenAddress>
+        <listenAddress>tcp://0.0.0.0:22000</listenAddress>
         <globalAnnounceServer>default</globalAnnounceServer>
         <globalAnnounceEnabled>false</globalAnnounceEnabled>
         <localAnnounceEnabled>false</localAnnounceEnabled>
