@@ -12,7 +12,7 @@ COPY consul-template_0.16.0_SHA256SUMS /usr/local/bin/consul-template_0.16.0_SHA
 USER root
 
 RUN \
-  apk add --update-cache curl unzip
+  apk add --update-cache curl unzip su-exec
 
 RUN \
   cd /usr/local/bin \
@@ -28,9 +28,6 @@ RUN \
 COPY start.sh /usr/local/bin/start.sh
 COPY syncthing.hcl /etc/syncthing.hcl
 COPY skip.sh /usr/local/bin/skip.sh
-
-USER user
-
 COPY config.xml.template /home/user/config.xml.template
 
 CMD /usr/local/bin/start.sh

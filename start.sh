@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-device_id=$( syncthing -generate="/home/user/.config/syncthing" | grep 'Device ID' | awk '{print $5}' )
+device_id=$( su-exec user syncthing -generate="/home/user/.config/syncthing" | grep 'Device ID' | awk '{print $5}' )
 
 ip=$SYNC_IP
 if [ -z "$ip" ]; then
@@ -20,8 +20,9 @@ for folder in $SYNC_FOLDERS; do
 
   mkdir -p $path
   touch "$path/.stfolder"
+  chown -R user $path
 
   curl -X PUT -d "$path" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/folders/list/$id
 done
 
-consul-template -config /etc/syncthing.hcl
+su-exec user consul-template -config /etc/syncthing.hcl
