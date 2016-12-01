@@ -27,6 +27,7 @@ RUN \
 
 COPY start.sh /usr/local/bin/start.sh
 COPY syncthing.hcl /etc/syncthing.hcl
+COPY skip.sh /usr/local/bin/skip.sh
 
 USER user
 
