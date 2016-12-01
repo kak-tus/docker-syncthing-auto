@@ -1,7 +1,10 @@
+{{ plugin "skip.sh" }}
+
 {{ $service := env "SYNC_SERVICE" }}
 <configuration version="17">
     {{ range $dc := datacenters }}
     {{ range $folder_id := ls ( printf "service/syncthing-auto/%s/folders/list@%s" $service $dc ) }}
+    {{ if plugin "skip.sh" ( printf "folder_id_%s" $folder_id.Key ) }}
     <folder id="{{ $folder_id.Key }}" label="" path="{{ $folder_id.Value }}" type="readwrite" rescanIntervalS="60" ignorePerms="false" autoNormalize="true">
 
         {{ range $dc := datacenters }}
@@ -25,7 +28,7 @@
         <disableTempIndexes>false</disableTempIndexes>
         <fsync>true</fsync>
     </folder>
-    {{ end }}{{ end }}
+    {{ end }}{{ end }}{{ end }}
 
     {{ range $dc := datacenters }}
     {{ range $ip := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
