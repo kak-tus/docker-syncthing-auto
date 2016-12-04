@@ -18,11 +18,13 @@ for folder in $SYNC_FOLDERS; do
   id=$( echo $folder | awk -F ':' '{print $1}' )
   path=$( echo $folder | awk -F ':' '{print $2}' )
 
-  mkdir -p $path
-  touch "$path/.stfolder"
-  chown -R user $path
+  if [ -n "$id" ]; then
+    mkdir -p $path
+    touch "$path/.stfolder"
+    chown -R user $path
 
-  curl -X PUT -d "$path" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/folders/list/$id
+    curl -X PUT -d "$path" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/folders/list/$id
+  fi
 done
 
 su-exec user consul-template -config /etc/syncthing.hcl
