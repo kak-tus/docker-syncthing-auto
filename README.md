@@ -35,6 +35,10 @@ SYNC_FOLDERS="
 
 SYNC_IP - external IP of container. Optional. If not set, service got internal container IP.
 
+USER_UID - UID for synced files.
+
+USER_GID - GID for synced files.
+
 ## Run in production
 
 In most cases you need to pass SYNC_IP to each container and expose 22000 port to connectivity containers to each other. You can expose 8384 port to connect to GUI. Don't expose GUI port to worldwide access.

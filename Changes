@@ -1,3 +1,6 @@
+0.4 2016-12-08
+  - Set UID/GID for synced files.
+
 0.3 2016-12-04
   - Skip empty strings.
 

@@ -1,5 +1,10 @@
 #!/usr/bin/env sh
 
+deluser user
+delgroup user
+addgroup -g $USER_GID user
+adduser -h /home/user -G user -D -u $USER_UID user
+
 device_id=$( su-exec user syncthing -generate="/home/user/.config/syncthing" | grep 'Device ID' | awk '{print $5}' )
 
 ip=$SYNC_IP
@@ -21,7 +26,7 @@ for folder in $SYNC_FOLDERS; do
   if [ -n "$id" ]; then
     mkdir -p $path
     touch "$path/.stfolder"
-    chown -R user $path
+    chown -R user:user $path
 
     curl -X PUT -d "$path" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/folders/list/$id
   fi
