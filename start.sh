@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
-deluser user
-delgroup user
+deluser user 2>/dev/null
+delgroup user 2>/dev/null
 addgroup -g $USER_GID user
 adduser -h /home/user -G user -D -u $USER_UID user
 
@@ -32,4 +32,8 @@ for folder in $SYNC_FOLDERS; do
   fi
 done
 
-su-exec user consul-template -config /etc/syncthing.hcl
+su-exec user consul-template -config /etc/syncthing.hcl >/proc/1/fd/1 2>/proc/1/fd/2 &
+child=$!
+
+trap "kill $child" SIGTERM
+wait "$child"
