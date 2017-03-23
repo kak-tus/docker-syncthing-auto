@@ -1,3 +1,6 @@
+0.6 2017-03-23
+  - Dockerfile refactoring.
+
 0.5 2016-12-28
   - No warn in logs.
   - Correct finishing.
