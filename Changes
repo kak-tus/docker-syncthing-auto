@@ -1,3 +1,7 @@
+0.7 2017-04-07
+  - Register bugfix (was removed curl).
+  - Option to disable deletion.
+
 0.6 2017-03-23
   - Dockerfile refactoring.
 

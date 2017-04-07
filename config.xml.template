@@ -19,7 +19,7 @@
         <pullers>0</pullers>
         <hashers>0</hashers>
         <order>random</order>
-        <ignoreDelete>false</ignoreDelete>
+        <ignoreDelete>{{ env "SYNC_IGNORE_DELETE" }}</ignoreDelete>
         <scanProgressIntervalS>0</scanProgressIntervalS>
         <pullerSleepS>0</pullerSleepS>
         <pullerPauseS>0</pullerPauseS>
