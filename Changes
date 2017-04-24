@@ -1,3 +1,6 @@
+0.8 2017-04-04
+  - Clear old instances support.
+
 0.7 2017-04-07
   - Register bugfix (was removed curl).
   - Option to disable deletion.
