@@ -12,7 +12,7 @@ if [ -z "$ip" ]; then
   ip=$( hostname -i | awk '{print $1}' )
 fi
 
-dt=$( date +%Y )
+dt=$( date +'%Y-%M-%d %H:%m:%S' )
 
 curl -X PUT -d "1" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/list/$ip
 
@@ -32,8 +32,9 @@ for folder in $SYNC_FOLDERS; do
   fi
 done
 
-su-exec user consul-template -config /etc/syncthing.hcl >/proc/1/fd/1 2>/proc/1/fd/2 &
+su-exec user consul-template -config /etc/syncthing.hcl &
 child=$!
 
-trap "kill $child" SIGTERM
-wait "$child"
+trap "kill $child" SIGTERM SIGINT
+
+
