@@ -21,7 +21,6 @@ RUN \
 
 COPY start.sh /usr/local/bin/start.sh
 COPY syncthing.hcl /etc/syncthing.hcl
-COPY skip.sh /usr/local/bin/skip.sh
 COPY config.xml.template /home/user/config.xml.template
 
 ENV USER_UID=1000
