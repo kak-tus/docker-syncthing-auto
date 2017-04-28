@@ -1,15 +1,16 @@
-{{ plugin "skip.sh" }}
-
 {{ $service := env "SYNC_SERVICE" }}
 <configuration version="17">
     {{ range $dc := datacenters }}
     {{ range $folder_id := ls ( printf "service/syncthing-auto/%s/folders/list@%s" $service $dc ) }}
-    {{ if plugin "skip.sh" ( printf "folder_id_%s" $folder_id.Key ) }}
+
+    {{ if not ( $folder_id.Key | printf "folder_id_%s" | scratch.Key ) }}
+    {{ scratch.Set ( $folder_id.Key | printf "folder_id_%s" ) "1" }}
+
     <folder id="{{ $folder_id.Key }}" label="" path="{{ $folder_id.Value }}" type="readwrite" rescanIntervalS="60" ignorePerms="false" autoNormalize="true">
 
         {{ range $dc := datacenters }}
         {{ range $ip := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
-        {{ if ne ( key_or_default ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) "0" ) "0" }}
+        {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}
         <device id="{{ key ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}" introducedBy=""></device>
         {{ end }}{{ end }}{{ end }}
 
@@ -19,7 +20,7 @@
         <pullers>0</pullers>
         <hashers>0</hashers>
         <order>random</order>
-        <ignoreDelete>{{ env "SYNC_IGNORE_DELETE" }}</ignoreDelete>
+        <ignoreDelete>{{ if env "SYNC_IGNORE_DELETE" }}true{{ else }}false{{ end }}</ignoreDelete>
         <scanProgressIntervalS>0</scanProgressIntervalS>
         <pullerSleepS>0</pullerSleepS>
         <pullerPauseS>0</pullerPauseS>
@@ -32,7 +33,7 @@
 
     {{ range $dc := datacenters }}
     {{ range $ip := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
-    {{ if ne ( key_or_default ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) "0" ) "0" }}
+    {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}
     <device id="{{ key ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}" name="{{ $ip.Key }}" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
         <address>tcp://{{ $ip.Key }}:22000</address>
     </device>
