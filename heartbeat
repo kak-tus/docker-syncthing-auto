@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+
+ip=$SYNC_IP
+if [ -z "$ip" ]; then
+  ip=$( hostname -i | awk '{print $1}' )
+fi
+
+dt=$( date +'%Y-%M-%d %H:%m:%S' )
+curl -X PUT -d "$dt" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip/time > /dev/nul

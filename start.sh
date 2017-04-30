@@ -12,12 +12,9 @@ if [ -z "$ip" ]; then
   ip=$( hostname -i | awk '{print $1}' )
 fi
 
-dt=$( date +'%Y-%M-%d %H:%m:%S' )
-
 curl -X PUT -d "1" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/list/$ip
 
 curl -X PUT -d "$device_id" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip/device_id
-curl -X PUT -d "$dt" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip/time
 
 for folder in $SYNC_FOLDERS; do
   id=$( echo $folder | awk -F ':' '{print $1}' )
@@ -33,8 +30,29 @@ for folder in $SYNC_FOLDERS; do
 done
 
 su-exec user consul-template -config /etc/syncthing.hcl &
-child=$!
+child1=$!
 
-trap "kill $child" SIGTERM SIGINT
+crond -f &
+child2=$!
 
+trap "kill $child1 $child2" SIGTERM SIGINT
 
+while true; do
+
+  kill -0 "$child1"
+  if [ "$?" = "0" ]; then
+    sleep 5
+  else
+    echo "Exited syncthing"
+    exit
+  fi
+
+  kill -0 "$child2"
+  if [ "$?" = "0" ]; then
+    sleep 5
+  else
+    echo "Exited cron"
+    exit
+  fi
+
+done

@@ -8,4 +8,5 @@ template {
 exec {
   command = "syncthing"
   splay = "60s"
+  kill_timeout = "20s"
 }
