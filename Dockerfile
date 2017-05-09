@@ -23,6 +23,7 @@ COPY start.sh /usr/local/bin/start.sh
 COPY syncthing.hcl /etc/syncthing.hcl
 COPY config.xml.template /home/user/config.xml.template
 COPY heartbeat /etc/periodic/15min/heartbeat
+COPY gc /etc/periodic/daily/gc
 
 ENV USER_UID=1000
 ENV USER_GID=1000
