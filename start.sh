@@ -12,9 +12,9 @@ if [ -z "$ip" ]; then
   ip=$( hostname -i | awk '{print $1}' )
 fi
 
-curl -X PUT -d "1" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/list/$ip
+curl -s -X PUT -d "1" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/list/$ip
 
-curl -X PUT -d "$device_id" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip/device_id
+curl -s -X PUT -d "$device_id" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip/device_id
 
 for folder in $SYNC_FOLDERS; do
   id=$( echo $folder | awk -F ':' '{print $1}' )
@@ -25,7 +25,7 @@ for folder in $SYNC_FOLDERS; do
     touch "$path/.stfolder"
     chown -R user:user $path
 
-    curl -X PUT -d "$path" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/folders/list/$id
+    curl -s -X PUT -d "$path" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/folders/list/$id
   fi
 done
 

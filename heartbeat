@@ -6,4 +6,4 @@ if [ -z "$ip" ]; then
 fi
 
 dt=$( date +'%Y-%M-%d %H:%m:%S' )
-curl -X PUT -d "$dt" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip/time > /dev/nul
+curl -s -X PUT -d "$dt" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip/time > /dev/nul
