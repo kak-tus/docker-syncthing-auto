@@ -35,7 +35,12 @@
     {{ range $ip := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
     {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}
     <device id="{{ key ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}" name="{{ $ip.Key }}" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
-        <address>tcp://{{ $ip.Key }}:22000</address>
+        <address>tcp://{{ $ip.Key }}:
+          {{- if keyExists ( printf "service/syncthing-auto/%s/devices/%s/port@%s" $service $ip.Key $dc ) }}
+            {{- key ( printf "service/syncthing-auto/%s/devices/%s/port@%s" $service $ip.Key $dc ) }}
+          {{- else }}22000
+          {{- end -}}
+        </address>
     </device>
     {{ end }}{{ end }}{{ end }}
 
@@ -46,7 +51,7 @@
     </gui>
 
     <options>
-        <listenAddress>tcp://0.0.0.0:22000</listenAddress>
+        <listenAddress>tcp://0.0.0.0:{{ env "SYNC_PORT" }}</listenAddress>
         <globalAnnounceServer>default</globalAnnounceServer>
         <globalAnnounceEnabled>false</globalAnnounceEnabled>
         <localAnnounceEnabled>false</localAnnounceEnabled>

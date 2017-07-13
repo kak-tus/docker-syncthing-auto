@@ -19,7 +19,7 @@ Copy file to /tmp/sync1 at host system and then it appear at /tmp/sync2.
 
 CONSUL_HTTP_ADDR - address of consul. Required.
 
-CONSUL_TOKEN - Consul ACL token. Required.
+CONSUL_TOKEN - Consul ACL token. Optional.
 
 SYNC_SERVICE - some service name. Must be identical thru syncthing-auto cluster. Required.
 
@@ -34,6 +34,7 @@ SYNC_FOLDERS="
 ```
 
 SYNC_IP - external IP of container. Optional. If not set, service got internal container IP.
+SYNC_PORT - external port of container. Optional. Default value 22000.
 
 USER_UID - UID for synced files.
 
@@ -41,6 +42,6 @@ USER_GID - GID for synced files.
 
 ## Run in production
 
-In most cases you need to pass SYNC_IP to each container and expose 22000 port to connectivity containers to each other. You can expose 8384 port to connect to GUI. Don't expose GUI port to worldwide access.
+In most cases you need to pass SYNC_IP to each container and expose 22000 (or SYNC_PORT) port to connectivity containers to each other. You can expose 8384 port to connect to GUI. Don't expose GUI port to worldwide access.
 
 If you use weave networking, SYNC_IP is not required. Service detect IP automatically and connect to each other thru weave network.

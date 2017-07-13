@@ -7,9 +7,11 @@ USER root
 
 RUN \
   apk add --no-cache --virtual .build-deps \
-  unzip \
+    unzip \
 
-  && apk add --no-cache su-exec curl \
+  && apk add --no-cache \
+    curl \
+    su-exec \
 
   && cd /usr/local/bin \
   && curl -L https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip -o consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.zip \
@@ -34,6 +36,7 @@ ENV CONSUL_TOKEN=
 ENV SYNC_SERVICE=
 ENV SYNC_FOLDERS=
 ENV SYNC_IP=
+ENV SYNC_PORT=22000
 ENV SYNC_IGNORE_DELETE=
 
-CMD [ "/usr/local/bin/start.sh" ]
+CMD ["/usr/local/bin/start.sh"]
