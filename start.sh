@@ -12,10 +12,11 @@ if [ -z "$ip" ]; then
   ip=$( hostname -i | awk '{print $1}' )
 fi
 
-curl -s -X PUT -d "1" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/list/$ip
+curl -s -X PUT -d "1" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/list/$ip-$SYNC_PORT
 
-curl -s -X PUT -d "$device_id" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip/device_id
-curl -s -X PUT -d "$SYNC_PORT" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip/port
+curl -s -X PUT -d "$device_id" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip-$SYNC_PORT/device_id
+curl -s -X PUT -d "$ip" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip-$SYNC_PORT/ip
+curl -s -X PUT -d "$SYNC_PORT" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip-$SYNC_PORT/port
 
 for folder in $SYNC_FOLDERS; do
   id=$( echo $folder | awk -F ':' '{print $1}' )
