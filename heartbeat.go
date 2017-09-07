@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/hashicorp/consul/api"
@@ -27,37 +29,37 @@ func main() {
 		panic(err)
 	}
 
-	// list, _, err := kv.List("service/syncthing-auto/"+srv+"/devices/list", nil)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	list, _, err := kv.List("service/syncthing-auto/"+srv+"/devices/list", nil)
+	if err != nil {
+		panic(err)
+	}
 
-	// for _, val := range list {
-	// 	str := strings.Split(val.Key, "/")
-	// 	ip := str[len(str)-1]
+	for _, val := range list {
+		str := strings.Split(val.Key, "/")
+		ip := str[len(str)-1]
 
-	// 	timeval, _, err := kv.Get("service/syncthing-auto/"+srv+"/devices/"+ip+"/time", nil)
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
+		timeval, _, err := kv.Get("service/syncthing-auto/"+srv+"/devices/"+ip+"/time", nil)
+		if err != nil {
+			panic(err)
+		}
 
-	// 	dtOld, err := time.Parse(time.RFC3339, string(timeval.Value))
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
+		dtOld, err := time.Parse(time.RFC3339, string(timeval.Value))
+		if err != nil {
+			panic(err)
+		}
 
-	// 	if dt.Sub(dtOld).Hours() > 24 {
-	// 		fmt.Println("Delete " + ip)
+		if dt.Sub(dtOld).Hours() > 24 {
+			fmt.Println("Delete " + ip)
 
-	// 		_, err = kv.Delete("service/syncthing-auto/"+srv+"/devices/list/"+ip, nil)
-	// 		if err != nil {
-	// 			panic(err)
-	// 		}
+			_, err = kv.Delete("service/syncthing-auto/"+srv+"/devices/list/"+ip, nil)
+			if err != nil {
+				panic(err)
+			}
 
-	// 		_, err = kv.DeleteTree("service/syncthing-auto/"+srv+"/devices/"+ip, nil)
-	// 		if err != nil {
-	// 			panic(err)
-	// 		}
-	// 	}
-	// }
+			_, err = kv.DeleteTree("service/syncthing-auto/"+srv+"/devices/"+ip, nil)
+			if err != nil {
+				panic(err)
+			}
+		}
+	}
 }

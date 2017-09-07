@@ -1,3 +1,9 @@
+0.14 2017-09-07
+  - GC support.
+    WARNING: please, migrate to 0.13 version and delete old data
+    in Consul path (service/syncthing-auto/<SYNC_SERVICE>/), before using this
+    version.
+
 0.13 2017-09-07
   - Check data written to Consul.
   - Time key fix.
