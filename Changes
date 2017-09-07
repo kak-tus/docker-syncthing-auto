@@ -1,3 +1,6 @@
+0.13 2017-09-07
+  - Check data written to Consul.
+
 0.12 2017-09-07
   - Set time zone.
   - Heartbeat and GC rewritten on Go.
