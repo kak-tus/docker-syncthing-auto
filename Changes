@@ -1,5 +1,6 @@
 0.13 2017-09-07
   - Check data written to Consul.
+  - Time key fix.
 
 0.12 2017-09-07
   - Set time zone.

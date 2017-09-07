@@ -15,11 +15,11 @@ func main() {
 
 	kv := client.KV()
 
-	ip := os.Getenv("SYNC_IP")
+	ipID := os.Getenv("SYNC_IP") + "-" + os.Getenv("SYNC_PORT")
 	dt := time.Now()
 	srv := os.Getenv("SYNC_SERVICE")
 
-	timeKey := "service/syncthing-auto/" + srv + "/devices/" + ip + "/time"
+	timeKey := "service/syncthing-auto/" + srv + "/devices/" + ipID + "/time"
 
 	put := &api.KVPair{Key: timeKey, Value: []byte(dt.Format(time.RFC3339))}
 	_, err = kv.Put(put, nil)
