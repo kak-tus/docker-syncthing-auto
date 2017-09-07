@@ -1,5 +1,8 @@
 0.12 2017-09-07
   - Set time zone.
+  - Heartbeat and GC rewritten on Go.
+  - Change heartbeat date format.
+  - Ready for GC.
 
 0.11 2017-08-23
   - Bugfix with many instances on one IP with different ports.

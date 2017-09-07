@@ -1,3 +1,16 @@
+FROM golang:alpine AS build
+
+COPY heartbeat.go /go/src/heartbeat/heartbeat.go
+
+RUN \
+  apk add --no-cache --virtual .build-deps \
+    git \
+
+  && cd /go/src/heartbeat \
+  && go get && go build \
+
+  && apk del .build-deps
+
 FROM tianon/syncthing:0.14
 
 ENV CONSUL_TEMPLATE_VERSION=0.18.2
@@ -24,8 +37,7 @@ RUN \
 COPY start.sh /usr/local/bin/start.sh
 COPY syncthing.hcl /etc/syncthing.hcl
 COPY config.xml.template /home/user/config.xml.template
-COPY heartbeat /etc/periodic/15min/heartbeat
-COPY gc /etc/periodic/daily/gc
+COPY --from=build /go/bin/heartbeat /etc/periodic/hourly/heartbeat
 
 ENV USER_UID=1000
 ENV USER_GID=1000

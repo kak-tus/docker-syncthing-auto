@@ -18,6 +18,7 @@ device_id=$( su-exec user syncthing -generate="/home/user/.config/syncthing" | g
 ip=$SYNC_IP
 if [ -z "$ip" ]; then
   ip=$( hostname -i | awk '{print $1}' )
+  export SYNC_IP=$ip
 fi
 
 curl -s -X PUT -d "1" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/list/$ip-$SYNC_PORT
