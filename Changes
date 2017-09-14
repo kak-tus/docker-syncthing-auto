@@ -1,3 +1,7 @@
+0.15 2017-09-14
+  - Fix panic on GC nodes without setuped time.
+  - Lower GC period.
+
 0.14 2017-09-07
   - GC support.
     WARNING: please, migrate to 0.13 version and delete old data

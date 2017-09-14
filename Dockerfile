@@ -7,7 +7,7 @@ RUN \
     git \
 
   && cd /go/src/heartbeat \
-  && go get && go build \
+  && go get \
 
   && apk del .build-deps
 

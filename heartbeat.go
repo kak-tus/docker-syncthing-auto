@@ -23,11 +23,7 @@ func main() {
 
 	timeKey := "service/syncthing-auto/" + srv + "/devices/" + ipID + "/time"
 
-	put := &api.KVPair{Key: timeKey, Value: []byte(dt.Format(time.RFC3339))}
-	_, err = kv.Put(put, nil)
-	if err != nil {
-		panic(err)
-	}
+	saveTime(kv, timeKey, dt)
 
 	list, _, err := kv.List("service/syncthing-auto/"+srv+"/devices/list", nil)
 	if err != nil {
@@ -38,9 +34,15 @@ func main() {
 		str := strings.Split(val.Key, "/")
 		ip := str[len(str)-1]
 
-		timeval, _, err := kv.Get("service/syncthing-auto/"+srv+"/devices/"+ip+"/time", nil)
+		timeKey = "service/syncthing-auto/" + srv + "/devices/" + ip + "/time"
+		timeval, _, err := kv.Get(timeKey, nil)
 		if err != nil {
 			panic(err)
+		}
+
+		if timeval == nil {
+			saveTime(kv, timeKey, dt)
+			continue
 		}
 
 		dtOld, err := time.Parse(time.RFC3339, string(timeval.Value))
@@ -48,7 +50,7 @@ func main() {
 			panic(err)
 		}
 
-		if dt.Sub(dtOld).Hours() > 24 {
+		if dt.Sub(dtOld).Hours() > 12 {
 			fmt.Println("Delete " + ip)
 
 			_, err = kv.Delete("service/syncthing-auto/"+srv+"/devices/list/"+ip, nil)
@@ -61,5 +63,13 @@ func main() {
 				panic(err)
 			}
 		}
+	}
+}
+
+func saveTime(kv *api.KV, key string, dt time.Time) {
+	put := &api.KVPair{Key: key, Value: []byte(dt.Format(time.RFC3339))}
+	_, err := kv.Put(put, nil)
+	if err != nil {
+		panic(err)
 	}
 }
