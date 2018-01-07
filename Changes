@@ -1,3 +1,6 @@
+0.17 2018-01-07
+  - Rebuild.
+
 0.16 2018-01-07
   - Migrate to official image.
   - Integrated inotify support.
