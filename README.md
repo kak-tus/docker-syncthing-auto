@@ -40,8 +40,16 @@ USER_UID - UID for synced files.
 
 USER_GID - GID for synced files.
 
+SYNC_MASTER_MODE - Optional. Default 1. To select master or slave mode. See "Master mode" section.
+
 ## Run in production
 
 In most cases you need to pass SYNC_IP to each container and expose 22000 (or SYNC_PORT) port to connectivity containers to each other. You can expose 8384 port to connect to GUI. Don't expose GUI port to worldwide access.
 
 If you use weave networking, SYNC_IP is not required. Service detect IP automatically and connect to each other thru weave network.
+
+## Master mode
+
+By default service start in master mode. It get folder config from environment, save it to Consul and start sync all of these folders.
+
+Sometimes you need to sync only one/two of these folders and optionaly change destination. To do this - you must set SYNC_MASTER_MODE="" (empty value). After that service not do save folders to Consul. And you can change destination. And only this folders (not all folders from Consul) will be used to sync.

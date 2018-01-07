@@ -54,7 +54,9 @@ for folder in $SYNC_FOLDERS; do
     touch "$path/.stfolder"
     chown -R user:user $path
 
-    curl -s -X PUT -d "$path" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/folders/list/$id
+    if [ -n "$SYNC_MASTER_MODE" ]; then
+      curl -s -X PUT -d "$path" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/folders/list/$id
+    fi
   fi
 done
 

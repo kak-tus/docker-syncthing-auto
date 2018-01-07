@@ -1,38 +1,61 @@
 {{ $service := env "SYNC_SERVICE" }}
-<configuration version="26">
-    {{ range $dc := datacenters }}
-    {{ range $folder_id := ls ( printf "service/syncthing-auto/%s/folders/list@%s" $service $dc ) }}
 
-    {{ if not ( $folder_id.Key | printf "folder_id_%s" | scratch.Key ) }}
-    {{ scratch.Set ( $folder_id.Key | printf "folder_id_%s" ) "1" }}
+{{ define "folder_template" }}
+  {{ $service := env "SYNC_SERVICE" }}
 
-    <folder id="{{ $folder_id.Key }}" label="" path="{{ $folder_id.Value }}" type="readwrite" rescanIntervalS="600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
-
-        {{ range $dc := datacenters }}
-        {{ range $ip := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
-        {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}
+  {{ range $dc := datacenters }}
+    {{ range $ip := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
+      {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}
         <device id="{{ key ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}" introducedBy=""></device>
-        {{ end }}{{ end }}{{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
 
-        <ignoreDelete>{{ if env "SYNC_IGNORE_DELETE" }}true{{ else }}false{{ end }}</ignoreDelete>
+  <ignoreDelete>{{ if env "SYNC_IGNORE_DELETE" }}true{{ else }}false{{ end }}</ignoreDelete>
 
-        <filesystemType>basic</filesystemType>
-        <minDiskFree unit="%">1</minDiskFree>
-        <versioning></versioning>
-        <copiers>0</copiers>
-        <pullers>0</pullers>
-        <hashers>0</hashers>
-        <order>random</order>
-        <scanProgressIntervalS>0</scanProgressIntervalS>
-        <pullerPauseS>0</pullerPauseS>
-        <maxConflicts>-1</maxConflicts>
-        <disableSparseFiles>false</disableSparseFiles>
-        <disableTempIndexes>false</disableTempIndexes>
-        <paused>false</paused>
-        <weakHashThresholdPct>25</weakHashThresholdPct>
-        <markerName>.stfolder</markerName>
-    </folder>
-    {{ end }}{{ end }}{{ end }}
+  <filesystemType>basic</filesystemType>
+  <minDiskFree unit="%">1</minDiskFree>
+  <versioning></versioning>
+  <copiers>0</copiers>
+  <pullers>0</pullers>
+  <hashers>0</hashers>
+  <order>random</order>
+  <scanProgressIntervalS>0</scanProgressIntervalS>
+  <pullerPauseS>0</pullerPauseS>
+  <maxConflicts>-1</maxConflicts>
+  <disableSparseFiles>false</disableSparseFiles>
+  <disableTempIndexes>false</disableTempIndexes>
+  <paused>false</paused>
+  <weakHashThresholdPct>25</weakHashThresholdPct>
+  <markerName>.stfolder</markerName>
+{{ end }}
+
+<configuration version="26">
+  {{ range $dc := datacenters }}
+    {{ if env "SYNC_MASTER_MODE" }}
+      {{ range $folder_id := ls ( printf "service/syncthing-auto/%s/folders/list@%s" $service $dc ) }}
+        {{ if not ( $folder_id.Key | printf "folder_id_%s" | scratch.Key ) }}
+          {{ scratch.Set ( $folder_id.Key | printf "folder_id_%s" ) "1" }}
+
+          <folder id="{{ $folder_id.Key }}" label="" path="{{ $folder_id.Value }}" type="readwrite" rescanIntervalS="600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+            {{ executeTemplate "folder_template" }}
+          </folder>
+        {{ end }}
+      {{ end }}
+    {{ else }}
+      {{ range $folder_id := env "SYNC_FOLDERS" | split "\n" }}
+        {{ $folder_id_key := index ( $folder_id | split ":" ) 0 }}
+        {{ $folder_id_val := index ( $folder_id | split ":" ) 1 }}
+        {{ if not ( $folder_id_key | printf "folder_id_%s" | scratch.Key ) }}
+          {{ scratch.Set ( $folder_id_key | printf "folder_id_%s" ) "1" }}
+
+          <folder id="{{ $folder_id_key }}" label="" path="{{ $folder_id_val }}" type="readwrite" rescanIntervalS="600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+            {{ executeTemplate "folder_template" }}
+          </folder>
+        {{ end }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
 
     {{ range $dc := datacenters }}
     {{ range $ip := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
