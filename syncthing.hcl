@@ -6,7 +6,7 @@ template {
 }
 
 exec {
-  command = "/syncthing/syncthing -home /home/user/config"
+  command = "/usr/local/bin/start.sh"
   splay = "60s"
   kill_timeout = "20s"
 }

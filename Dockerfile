@@ -51,8 +51,9 @@ RUN \
   && apk del .build-deps
 
 COPY start.sh /usr/local/bin/start.sh
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY syncthing.hcl /etc/syncthing.hcl
 COPY config.xml.template /etc/config.xml.template
 COPY --from=build /go/bin/heartbeat /etc/periodic/hourly/heartbeat
 
-ENTRYPOINT ["/usr/local/bin/start.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
