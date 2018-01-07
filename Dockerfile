@@ -11,10 +11,26 @@ RUN \
 
   && apk del .build-deps
 
-FROM tianon/syncthing:0.14
+FROM syncthing/syncthing:v0.14.42
 
-ENV CONSUL_TEMPLATE_VERSION=0.18.2
-ENV CONSUL_TEMPLATE_SHA256=6fee6ab68108298b5c10e01357ea2a8e4821302df1ff9dd70dd9896b5c37217c
+ENV \
+  CONSUL_TEMPLATE_VERSION=0.19.4 \
+  CONSUL_TEMPLATE_SHA256=5f70a7fb626ea8c332487c491924e0a2d594637de709e5b430ecffc83088abc0 \
+
+  USER_UID=1000 \
+  USER_GID=1000 \
+
+  SET_CONTAINER_TIMEZONE=true \
+  CONTAINER_TIMEZONE=Europe/Moscow \
+
+  CONSUL_HTTP_ADDR= \
+  CONSUL_TOKEN= \
+
+  SYNC_SERVICE= \
+  SYNC_FOLDERS= \
+  SYNC_IP= \
+  SYNC_PORT=22000 \
+  SYNC_IGNORE_DELETE=
 
 USER root
 
@@ -36,22 +52,7 @@ RUN \
 
 COPY start.sh /usr/local/bin/start.sh
 COPY syncthing.hcl /etc/syncthing.hcl
-COPY config.xml.template /home/user/config.xml.template
+COPY config.xml.template /etc/config.xml.template
 COPY --from=build /go/bin/heartbeat /etc/periodic/hourly/heartbeat
 
-ENV USER_UID=1000
-ENV USER_GID=1000
-
-ENV SET_CONTAINER_TIMEZONE=true
-ENV CONTAINER_TIMEZONE=Europe/Moscow
-
-ENV CONSUL_HTTP_ADDR=
-ENV CONSUL_TOKEN=
-
-ENV SYNC_SERVICE=
-ENV SYNC_FOLDERS=
-ENV SYNC_IP=
-ENV SYNC_PORT=22000
-ENV SYNC_IGNORE_DELETE=
-
-CMD ["/usr/local/bin/start.sh"]
+ENTRYPOINT ["/usr/local/bin/start.sh"]

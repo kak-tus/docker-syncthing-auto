@@ -8,12 +8,12 @@ else
     echo "Container timezone not modified"
 fi
 
-deluser user 2>/dev/null
-delgroup user 2>/dev/null
+deluser syncthing 2>/dev/null
+delgroup syncthing 2>/dev/null
 addgroup -g $USER_GID user
 adduser -h /home/user -G user -D -u $USER_UID user
 
-device_id=$( su-exec user syncthing -generate="/home/user/.config/syncthing" | grep 'Device ID' | awk '{print $5}' )
+device_id=$( su-exec user /syncthing/syncthing -generate="/home/user/config" | grep 'Device ID' | awk '{print $5}' )
 
 ip=$SYNC_IP
 if [ -z "$ip" ]; then

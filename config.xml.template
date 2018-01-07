@@ -1,12 +1,12 @@
 {{ $service := env "SYNC_SERVICE" }}
-<configuration version="17">
+<configuration version="26">
     {{ range $dc := datacenters }}
     {{ range $folder_id := ls ( printf "service/syncthing-auto/%s/folders/list@%s" $service $dc ) }}
 
     {{ if not ( $folder_id.Key | printf "folder_id_%s" | scratch.Key ) }}
     {{ scratch.Set ( $folder_id.Key | printf "folder_id_%s" ) "1" }}
 
-    <folder id="{{ $folder_id.Key }}" label="" path="{{ $folder_id.Value }}" type="readwrite" rescanIntervalS="60" ignorePerms="false" autoNormalize="true">
+    <folder id="{{ $folder_id.Key }}" label="" path="{{ $folder_id.Value }}" type="readwrite" rescanIntervalS="600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
 
         {{ range $dc := datacenters }}
         {{ range $ip := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
@@ -14,20 +14,23 @@
         <device id="{{ key ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}" introducedBy=""></device>
         {{ end }}{{ end }}{{ end }}
 
-        <minDiskFreePct>1</minDiskFreePct>
+        <ignoreDelete>{{ if env "SYNC_IGNORE_DELETE" }}true{{ else }}false{{ end }}</ignoreDelete>
+
+        <filesystemType>basic</filesystemType>
+        <minDiskFree unit="%">1</minDiskFree>
         <versioning></versioning>
         <copiers>0</copiers>
         <pullers>0</pullers>
         <hashers>0</hashers>
         <order>random</order>
-        <ignoreDelete>{{ if env "SYNC_IGNORE_DELETE" }}true{{ else }}false{{ end }}</ignoreDelete>
         <scanProgressIntervalS>0</scanProgressIntervalS>
-        <pullerSleepS>0</pullerSleepS>
         <pullerPauseS>0</pullerPauseS>
-        <maxConflicts>10</maxConflicts>
+        <maxConflicts>-1</maxConflicts>
         <disableSparseFiles>false</disableSparseFiles>
         <disableTempIndexes>false</disableTempIndexes>
-        <fsync>true</fsync>
+        <paused>false</paused>
+        <weakHashThresholdPct>25</weakHashThresholdPct>
+        <markerName>.stfolder</markerName>
     </folder>
     {{ end }}{{ end }}{{ end }}
 
@@ -44,6 +47,9 @@
           {{- else }}22000
           {{- end -}}
         </address>
+
+        <paused>false</paused>
+        <autoAcceptFolders>false</autoAcceptFolders>
     </device>
     {{ end }}{{ end }}{{ end }}
 
@@ -71,20 +77,33 @@
         <natRenewalMinutes>30</natRenewalMinutes>
         <natTimeoutSeconds>10</natTimeoutSeconds>
         <urAccepted>0</urAccepted>
-        <urUniqueID></urUniqueID>
+        <urSeen>0</urSeen>
+        <urUniqueID>qfydqVRf</urUniqueID>
         <urURL>https://data.syncthing.net/newdata</urURL>
         <urPostInsecurely>false</urPostInsecurely>
         <urInitialDelayS>1800</urInitialDelayS>
         <restartOnWakeup>true</restartOnWakeup>
         <autoUpgradeIntervalH>12</autoUpgradeIntervalH>
+        <upgradeToPreReleases>false</upgradeToPreReleases>
         <keepTemporariesH>24</keepTemporariesH>
         <cacheIgnoredFiles>false</cacheIgnoredFiles>
         <progressUpdateIntervalS>5</progressUpdateIntervalS>
-        <symlinksEnabled>true</symlinksEnabled>
         <limitBandwidthInLan>false</limitBandwidthInLan>
-        <minHomeDiskFreePct>1</minHomeDiskFreePct>
+        <minHomeDiskFree unit="%">1</minHomeDiskFree>
         <releasesURL>https://upgrades.syncthing.net/meta.json</releasesURL>
         <overwriteRemoteDeviceNamesOnConnect>false</overwriteRemoteDeviceNamesOnConnect>
         <tempIndexMinBlocks>10</tempIndexMinBlocks>
+        <trafficClass>0</trafficClass>
+        <weakHashSelectionMethod>auto</weakHashSelectionMethod>
+        <stunServer>default</stunServer>
+        <stunKeepaliveSeconds>24</stunKeepaliveSeconds>
+        <kcpNoDelay>false</kcpNoDelay>
+        <kcpUpdateIntervalMs>25</kcpUpdateIntervalMs>
+        <kcpFastResend>false</kcpFastResend>
+        <kcpCongestionControl>true</kcpCongestionControl>
+        <kcpSendWindowSize>128</kcpSendWindowSize>
+        <kcpReceiveWindowSize>128</kcpReceiveWindowSize>
+        <defaultFolderPath>~</defaultFolderPath>
+        <minHomeDiskFreePct>0</minHomeDiskFreePct>
     </options>
 </configuration>

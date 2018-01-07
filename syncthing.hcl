@@ -1,12 +1,12 @@
 max_stale = "2m"
 
 template {
-  source = "/home/user/config.xml.template"
-  destination = "/home/user/.config/syncthing/config.xml"
+  source = "/etc/config.xml.template"
+  destination = "/home/user/config/config.xml"
 }
 
 exec {
-  command = "syncthing"
+  command = "/syncthing/syncthing -home /home/user/config"
   splay = "60s"
   kill_timeout = "20s"
 }
