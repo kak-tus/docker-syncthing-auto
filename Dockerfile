@@ -11,7 +11,7 @@ RUN \
 
   && apk del .build-deps
 
-FROM syncthing/syncthing:v0.14.42
+FROM syncthing/syncthing:v0.14.43
 
 ENV \
   CONSUL_TEMPLATE_VERSION=0.19.4 \

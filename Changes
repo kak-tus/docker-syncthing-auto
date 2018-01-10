@@ -1,5 +1,6 @@
 0.19 2018-01-10
   - Higher splay time.
+  - Update syncthing to 0.14.43.
 
 0.18 2018-01-07
   - Partial sync support.
