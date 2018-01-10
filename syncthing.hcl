@@ -7,6 +7,6 @@ template {
 
 exec {
   command = "/usr/local/bin/start.sh"
-  splay = "60s"
+  splay = "300s"
   kill_timeout = "20s"
 }
