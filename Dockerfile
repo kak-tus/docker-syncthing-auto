@@ -1,15 +1,8 @@
-FROM golang:alpine AS build
+FROM golang:1.10-alpine AS build
 
-COPY heartbeat.go /go/src/heartbeat/heartbeat.go
-
-RUN \
-  apk add --no-cache --virtual .build-deps \
-    git \
-  \
-  && cd /go/src/heartbeat \
-  && go get \
-  \
-  && apk del .build-deps
+WORKDIR /go/src/heartbeat
+COPY heartbeat.go ./
+RUN apk add --no-cache git && go get
 
 FROM syncthing/syncthing:v0.14.46
 

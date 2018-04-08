@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-/syncthing/syncthing -home /home/user/config &
+/bin/syncthing -home /home/user/config &
 child=$!
 
 trap "kill $child" SIGTERM SIGINT
