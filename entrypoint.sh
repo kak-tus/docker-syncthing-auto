@@ -21,25 +21,25 @@ if [ -z "$ip" ]; then
   export SYNC_IP=$ip
 fi
 
-curl -s -X PUT -d "1" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/list/$ip-$SYNC_PORT
+curl -sS -X PUT -d "1" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/list/$ip-$SYNC_PORT
 if [ $? != "0" ]; then
   echo "Unsuccess consul call"
   exit 1
 fi
 
-curl -s -X PUT -d "$device_id" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip-$SYNC_PORT/device_id
+curl -sS -X PUT -d "$device_id" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip-$SYNC_PORT/device_id
 if [ $? != "0" ]; then
   echo "Unsuccess consul call"
   exit 1
 fi
 
-curl -s -X PUT -d "$ip" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip-$SYNC_PORT/ip
+curl -sS -X PUT -d "$ip" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip-$SYNC_PORT/ip
 if [ $? != "0" ]; then
   echo "Unsuccess consul call"
   exit 1
 fi
 
-curl -s -X PUT -d "$SYNC_PORT" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip-$SYNC_PORT/port
+curl -sS -X PUT -d "$SYNC_PORT" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/$ip-$SYNC_PORT/port
 if [ $? != "0" ]; then
   echo "Unsuccess consul call"
   exit 1
@@ -55,7 +55,7 @@ for folder in $SYNC_FOLDERS; do
     chown -R user:user $path
 
     if [ -n "$SYNC_MASTER_MODE" ]; then
-      curl -s -X PUT -d "$path" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/folders/list/$id
+      curl -sS -X PUT -d "$path" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/folders/list/$id
     fi
   fi
 done
