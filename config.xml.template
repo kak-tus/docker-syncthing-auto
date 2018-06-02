@@ -3,7 +3,7 @@
 {{ define "folder_template" }}
   {{ $service := env "SYNC_SERVICE" }}
 
-  {{ range $dc := datacenters }}
+  {{ range $dc := datacenters true }}
     {{ range $ip := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
       {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}
         <device id="{{ key ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}" introducedBy=""></device>
@@ -31,7 +31,7 @@
 {{ end }}
 
 <configuration version="26">
-  {{ range $dc := datacenters }}
+  {{ range $dc := datacenters true }}
     {{ if env "SYNC_MASTER_MODE" }}
       {{ range $folder_id := ls ( printf "service/syncthing-auto/%s/folders/list@%s" $service $dc ) }}
         {{ if not ( $folder_id.Key | printf "folder_id_%s" | scratch.Key ) }}
@@ -57,7 +57,7 @@
     {{ end }}
   {{ end }}
 
-    {{ range $dc := datacenters }}
+    {{ range $dc := datacenters true }}
     {{ range $ip := ls ( printf "service/syncthing-auto/%s/devices/list@%s" $service $dc ) }}
     {{ if keyExists ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}
     <device id="{{ key ( printf "service/syncthing-auto/%s/devices/%s/device_id@%s" $service $ip.Key $dc ) }}" name="{{ $ip.Key }}" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
