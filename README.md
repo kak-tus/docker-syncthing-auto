@@ -7,9 +7,9 @@ You need running instance of [Consul](https://www.consul.io) to discovery.
 ## Run example
 
 ```
-sudo docker run --rm -it -e CONSUL_HTTP_ADDR=consul.service.consul:8500 -e CONSUL_TOKEN=<SOME_CONSUL_TOKEN> -e SYNC_SERVICE=sync -e SYNC_FOLDERS='test:/home/user/test' -v /tmp/sync1:/home/user/test kaktuss/syncthing-auto:latest
+sudo docker run --rm -it -e CONSUL_HTTP_ADDR=consul.service.consul:8500 -e CONSUL_TOKEN=<SOME_CONSUL_TOKEN> -e SYNC_SERVICE=sync -e SYNC_FOLDERS='test:/home/user/test' -e SYNC_IP=<CONTAINER_1_IP> -v /tmp/sync1:/home/user/test kaktuss/syncthing-auto:latest
 
-sudo docker run --rm -it -e CONSUL_HTTP_ADDR=consul.service.consul:8500 -e CONSUL_TOKEN=<SOME_CONSUL_TOKEN> -e SYNC_SERVICE=sync -e SYNC_FOLDERS='test:/home/user/test' -v /tmp/sync2:/home/user/test kaktuss/syncthing-auto:latest
+sudo docker run --rm -it -e CONSUL_HTTP_ADDR=consul.service.consul:8500 -e CONSUL_TOKEN=<SOME_CONSUL_TOKEN> -e SYNC_SERVICE=sync -e SYNC_FOLDERS='test:/home/user/test' -e SYNC_IP=<CONTAINER_2_IP> -v /tmp/sync2:/home/user/test kaktuss/syncthing-auto:latest
 ```
 
 Copy file to /tmp/sync1 at host system and then it appear at /tmp/sync2.
@@ -33,7 +33,8 @@ SYNC_FOLDERS="
 "
 ```
 
-SYNC_IP - external IP of container. Optional. If not set, service got internal container IP.
+SYNC_IP - external IP of container. Required.
+
 SYNC_PORT - external port of container. Optional. Default value 22000.
 
 USER_UID - UID for synced files.
@@ -44,9 +45,7 @@ SYNC_MASTER_MODE - Optional. Default 1. To select master or slave mode. See "Mas
 
 ## Run in production
 
-In most cases you need to pass SYNC_IP to each container and expose 22000 (or SYNC_PORT) port to connectivity containers to each other. You can expose 8384 port to connect to GUI. Don't expose GUI port to worldwide access.
-
-If you use weave networking, SYNC_IP is not required. Service detect IP automatically and connect to each other thru weave network.
+You need to pass SYNC_IP to each container and expose 22000 (or SYNC_PORT) port to connectivity containers to each other. You can expose 8384 port to connect to GUI. Don't expose GUI port to worldwide access.
 
 ## Master mode
 

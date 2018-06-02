@@ -16,10 +16,6 @@ adduser -h /home/user -G user -D -u $USER_UID user
 device_id=$( su-exec user /bin/syncthing -generate="/home/user/config" | grep 'Device ID' | awk '{print $5}' )
 
 ip=$SYNC_IP
-if [ -z "$ip" ]; then
-  ip=$( hostname -i | awk '{print $1}' )
-  export SYNC_IP=$ip
-fi
 
 curl -sS -X PUT -d "1" http://$CONSUL_HTTP_ADDR/v1/kv/service/syncthing-auto/$SYNC_SERVICE/devices/list/$ip-$SYNC_PORT
 if [ $? != "0" ]; then
