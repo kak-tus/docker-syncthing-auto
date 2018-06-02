@@ -20,6 +20,10 @@ WORKDIR /go/src/heartbeat
 COPY heartbeat.go ./
 RUN go get
 
+WORKDIR /go/src/init
+COPY init/main.go ./
+RUN go get
+
 FROM syncthing/syncthing:v0.14.46
 
 ENV \
@@ -52,5 +56,6 @@ COPY syncthing.hcl /etc/syncthing.hcl
 COPY config.xml.template /etc/config.xml.template
 COPY --from=build /go/bin/heartbeat /etc/periodic/hourly/heartbeat
 COPY --from=build /usr/local/bin/consul-template /usr/local/bin/consul-template
+COPY --from=build /go/bin/init /usr/local/bin/init
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

@@ -2,6 +2,7 @@
   - Dockerfile refactoring.
   - Skip failed DCs.
   - SYNC_IP is now required to start.
+  - Reliable init script.
 
 0.21 2018-05-31
   - Output register error to consul with curl.
