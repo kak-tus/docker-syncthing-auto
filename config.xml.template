@@ -37,7 +37,7 @@
         {{ if not ( $folder_id.Key | printf "folder_id_%s" | scratch.Key ) }}
           {{ scratch.Set ( $folder_id.Key | printf "folder_id_%s" ) "1" }}
 
-          <folder id="{{ $folder_id.Key }}" label="" path="{{ $folder_id.Value }}" type="readwrite" rescanIntervalS="600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+          <folder id="{{ $folder_id.Key }}" label="" path="{{ $folder_id.Value }}" type="readwrite" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
             {{ executeTemplate "folder_template" }}
           </folder>
         {{ end }}
@@ -49,7 +49,7 @@
         {{ if not ( $folder_id_key | printf "folder_id_%s" | scratch.Key ) }}
           {{ scratch.Set ( $folder_id_key | printf "folder_id_%s" ) "1" }}
 
-          <folder id="{{ $folder_id_key }}" label="" path="{{ $folder_id_val }}" type="readwrite" rescanIntervalS="600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+          <folder id="{{ $folder_id_key }}" label="" path="{{ $folder_id_val }}" type="readwrite" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
             {{ executeTemplate "folder_template" }}
           </folder>
         {{ end }}
@@ -89,8 +89,8 @@
         <localAnnounceEnabled>false</localAnnounceEnabled>
         <localAnnouncePort>21027</localAnnouncePort>
         <localAnnounceMCAddr>[ff12::8384]:21027</localAnnounceMCAddr>
-        <maxSendKbps>0</maxSendKbps>
-        <maxRecvKbps>0</maxRecvKbps>
+        <maxSendKbps>{{ env "SYNC_SEND_LIMIT" }}</maxSendKbps>
+        <maxRecvKbps>{{ env "SYNC_RECV_LIMIT" }}</maxRecvKbps>
         <reconnectionIntervalS>60</reconnectionIntervalS>
         <relaysEnabled>false</relaysEnabled>
         <relayReconnectIntervalM>10</relayReconnectIntervalM>

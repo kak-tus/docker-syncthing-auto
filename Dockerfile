@@ -24,7 +24,7 @@ WORKDIR /go/src/init
 COPY init/main.go ./
 RUN go get
 
-FROM syncthing/syncthing:v0.14.46
+FROM syncthing/syncthing:v0.14.49
 
 ENV \
   USER_UID=1000 \
@@ -41,7 +41,9 @@ ENV \
   SYNC_IP= \
   SYNC_PORT=22000 \
   SYNC_IGNORE_DELETE= \
-  SYNC_MASTER_MODE=1
+  SYNC_MASTER_MODE=1 \
+  SYNC_SEND_LIMIT=0 \
+  SYNC_RECV_LIMIT=0
 
 USER root
 
