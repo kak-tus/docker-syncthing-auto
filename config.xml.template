@@ -16,9 +16,9 @@
   <filesystemType>basic</filesystemType>
   <minDiskFree unit="%">1</minDiskFree>
   <versioning></versioning>
-  <copiers>0</copiers>
-  <pullers>0</pullers>
-  <hashers>0</hashers>
+  <copiers>{{ if env "SYNC_NEED_LOW_PERFOMANCE" }}1{{ else }}0{{ end }}</copiers>
+  <pullers>{{ if env "SYNC_NEED_LOW_PERFOMANCE" }}1{{ else }}0{{ end }}</pullers>
+  <hashers>{{ if env "SYNC_NEED_LOW_PERFOMANCE" }}1{{ else }}0{{ end }}</hashers>
   <order>random</order>
   <scanProgressIntervalS>0</scanProgressIntervalS>
   <pullerPauseS>0</pullerPauseS>
@@ -128,5 +128,6 @@
         <kcpReceiveWindowSize>128</kcpReceiveWindowSize>
         <defaultFolderPath>~</defaultFolderPath>
         <minHomeDiskFreePct>0</minHomeDiskFreePct>
+        <setLowPriority>{{ if env "SYNC_NEED_LOW_PERFOMANCE" }}true{{ else }}false{{ end }}</setLowPriority>
     </options>
 </configuration>
