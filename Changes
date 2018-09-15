@@ -1,5 +1,6 @@
 0.23 2018-09-15
   - Correct deletion date calc in GC.
+  - Fix delete old folders without items in list.
 
 0.22 2018-06-02
   - Dockerfile refactoring.
