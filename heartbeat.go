@@ -20,6 +20,7 @@ func main() {
 	ipID := os.Getenv("SYNC_IP") + "-" + os.Getenv("SYNC_PORT")
 	dt := time.Now()
 	srv := os.Getenv("SYNC_SERVICE")
+	dtLimit := dt.Add(-time.Duration(12 * time.Hour))
 
 	timeKey := "service/syncthing-auto/" + srv + "/devices/" + ipID + "/time"
 
@@ -50,7 +51,7 @@ func main() {
 			panic(err)
 		}
 
-		if dt.Sub(dtOld).Hours() > 12 {
+		if dtOld.Before(dtLimit) {
 			fmt.Println("Delete " + ip)
 
 			_, err = kv.Delete("service/syncthing-auto/"+srv+"/devices/list/"+ip, nil)

@@ -1,3 +1,6 @@
+0.23 2018-09-15
+  - Correct deletion date calc in GC.
+
 0.22 2018-06-02
   - Dockerfile refactoring.
   - Skip failed DCs.
