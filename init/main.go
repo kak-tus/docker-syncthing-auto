@@ -60,6 +60,7 @@ func main() {
 		}
 
 		fl := filepath.Join(path, ".stfolder")
+
 		h, err := os.Create(fl)
 		if err != nil {
 			panic(err)
@@ -71,6 +72,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+
 		gid, err := strconv.Atoi(os.Getenv("USER_GID"))
 		if err != nil {
 			panic(err)
@@ -97,6 +99,7 @@ func getClient() *api.KV {
 	}
 
 	kv := client.KV()
+
 	return kv
 }
 

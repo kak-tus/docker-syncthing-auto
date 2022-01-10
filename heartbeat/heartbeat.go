@@ -59,6 +59,7 @@ func main() {
 		}
 
 		ips[ip] = true
+
 		processItem(ip)
 	}
 }
@@ -98,6 +99,7 @@ func processItem(ip string) {
 
 func saveTime(key string, dt time.Time) {
 	put := &api.KVPair{Key: key, Value: []byte(dt.Format(time.RFC3339))}
+
 	_, err := kv.Put(put, nil)
 	if err != nil {
 		panic(err)

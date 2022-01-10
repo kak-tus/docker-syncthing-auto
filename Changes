@@ -1,3 +1,9 @@
+v1.0.0 2022-01-10
+  - Move go scripts to folders with go.mod.
+  - Use latest go.
+  - Use latest syncthing.
+  - Use latest consul-template from official image.
+
 0.23 2018-09-15
   - Correct deletion date calc in GC.
   - Fix delete old folders without items in list.
